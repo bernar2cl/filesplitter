@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>División de Archivos</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #eef2f3, #ffffff);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .card {
+            background: white;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            padding: 2rem;
+            border-radius: 1rem;
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin: 1rem 0 0.5rem;
+            text-align: left;
+            color: #444;
+            font-weight: bold;
+        }
+
+        input[type="file"],
+        input[type="number"] {
+            width: 100%;
+            padding: 0.6rem;
+            border: 1px solid #ccc;
+            border-radius: 0.5rem;
+        }
+
+        #drop-zone {
+            border: 2px dashed #aaa;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            margin-bottom: 1rem;
+            color: #666;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        #drop-zone.highlight {
+            background-color: #e6ffed;
+            border-color: #3cba54;
+            color: #333;
+        }
+
+        button {
+            margin-top: 1.5rem;
+            padding: 0.75rem 2rem;
+            font-size: 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            background-color: #3cba54;
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #2e9b42;
+        }
+
+        #mensajeProcesando {
+            margin-top: 1rem;
+            font-weight: bold;
+            color: #444;
+        }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h1>División de Archivos</h1>
+    <form action="/procesar" method="POST" enctype="multipart/form-data" id="form-subida">
+        <div id="drop-zone">Arrastra tu archivo aquí o haz clic</div>
+        <input type="file" id="archivo" name="archivo" required><br>
+
+        <label for="tamSegmento">Tamaño de segmento (bytes)</label>
+        <input type="number" id="tamSegmento" name="tamSegmento" required><br>
+
+        <button type="submit">Procesar</button>
+    </form>
+
+    <div id="mensajeProcesando" style="display: none;">
+        <strong>Procesando archivo...</strong>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('archivo');
+        const form = document.getElementById('form-subida');
+        const mensaje = document.getElementById('mensajeProcesando');
+
+        ['dragenter','dragover','dragleave','drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, e => e.preventDefault(), false);
+        });
+
+        ['dragenter','dragover'].forEach(eventName => {
+            dropZone.classList.add('highlight');
+        });
+
+        ['dragleave','drop'].forEach(eventName => {
+            dropZone.classList.remove('highlight');
+        });
+
+        dropZone.addEventListener('click', () => fileInput.click());
+
+        dropZone.addEventListener('drop', e => {
+            if (e.dataTransfer.files.length) {
+                fileInput.files = e.dataTransfer.files;
+            }
+        });
+
+        form.addEventListener('submit', () => {
+            mensaje.style.display = 'block';
+        });
+    });
+</script>
+</body>
+</html>
+
