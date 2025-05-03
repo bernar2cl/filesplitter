@@ -31,8 +31,7 @@ Aplicación web desarrollada en **Java 17 + Spring Boot + Thymeleaf** que permit
 
 1. Clona el repositorio:
    ```bash
-   git https://github.com/bernar2cl/Astra-Group.git
-   cd Astra-Group
+   git https://github.com/bernar2cl/filesplitter.git
    cd filesplitter
 
 2. Compila y ejecuta la aplicación:
