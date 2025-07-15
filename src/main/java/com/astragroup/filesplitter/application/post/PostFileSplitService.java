@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.*;
+import java.util.stream.Stream;
 
 @Service
 public class PostFileSplitService {
@@ -17,9 +18,25 @@ public class PostFileSplitService {
         Files.createDirectories(uploadDir);
     }
 
+    public void eliminarTodosLosArchivos() throws IOException {
+        if (Files.exists(uploadDir) && Files.isDirectory(uploadDir)) {
+            try (Stream<Path> archivos = Files.list(uploadDir)) {
+                archivos.forEach(archivo -> {
+                    try {
+                        Files.deleteIfExists(archivo);
+                    } catch (IOException e) {
+                        System.err.println("No se pudo eliminar el archivo: " + archivo.getFileName());
+                        e.printStackTrace();
+                    }
+                });
+            }
+        }
+    }
+
     public void dividirArchivo(MultipartFile archivo, int tamSegmento, String baseName, String extension) throws IOException {
         byte[] buffer = new byte[tamSegmento];
         int contador = 0;
+        this.eliminarTodosLosArchivos();
 
         try (InputStream is = archivo.getInputStream()) {
             int bytesLeidos;
